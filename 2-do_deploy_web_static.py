@@ -8,6 +8,18 @@ from os import path
 env.hosts = ["52.205.104.225", "54.208.233.216"]
 
 
+def do_pack():
+    """Function to generate .tgz archive from web_static folder."""
+    local("mkdir -p versions")
+    date = datetime.now().strftime("%Y%m%d%H%M%S")
+    file = "versions/web_static_{}.tgz".format(date)
+    try:
+        local("tar -cvzf {} web_static".format(file))
+        return file
+    except:
+        return None
+
+
 def do_deploy(archive_path):
     """Function that distributes an archive to your web servers,
     using the function do_deploy"""
@@ -22,11 +34,8 @@ def do_deploy(archive_path):
         path_r = "/data/web_static/releases/"
         path_current = "/data/web_static/current"
         run("mkdir -p {}{}/".format(path_r, file_name_no_ext))
-        run(
-            "tar -xzf /tmp/{} -C {}{}/".format(
-                file_name, path_r, file_name_no_ext
-            )
-        )
+        run("tar -xzf /tmp/{} -C {}{}/".format(file_name, path_r,
+                                               file_name_no_ext))
         run("rm /tmp/{}".format(file_name))
         run("mv {0}{1}/web_static/* {0}{1}/".format(path_r, file_name_no_ext))
         run("rm -rf {}{}/web_static".format(path_r, file_name_no_ext))
