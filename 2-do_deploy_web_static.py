@@ -6,6 +6,7 @@ from fabric.api import *
 from os import path
 
 env.hosts = ["52.205.104.225", "54.208.233.216"]
+env.user = "ubuntu"
 
 
 def do_pack():
@@ -21,26 +22,20 @@ def do_pack():
 
 
 def do_deploy(archive_path):
-    """Function that distributes an archive to your web servers,
-    using the function do_deploy"""
-
-    if path.exists(archive_path) is False:
+    """Function to distribute an archive to web servers."""
+    if not path.exists(archive_path):
         return False
-
     try:
         put(archive_path, "/tmp/")
-        file_name = archive_path.split("/")[-1]
-        file_name_no_ext = file_name.split(".")[0]
-        path_r = "/data/web_static/releases/"
-        path_current = "/data/web_static/current"
-        run("mkdir -p {}{}/".format(path_r, file_name_no_ext))
-        run("tar -xzf /tmp/{} -C {}{}/".format(file_name, path_r,
-                                               file_name_no_ext))
-        run("rm /tmp/{}".format(file_name))
-        run("mv {0}{1}/web_static/* {0}{1}/".format(path_r, file_name_no_ext))
-        run("rm -rf {}{}/web_static".format(path_r, file_name_no_ext))
-        run("rm -rf {}".format(path_current))
-        run("ln -s {}{}/ {}".format(path_r, file_name_no_ext, path_current))
+        file = archive_path.split("/")[-1]
+        folder = ("/data/web_static/releases/" + file.split(".")[0])
+        run("mkdir -p {}".format(folder))
+        run("tar -xzf /tmp/{} -C {}".format(file, folder))
+        run("rm /tmp/{}".format(file))
+        run("mv {}/web_static/* {}".format(folder, folder))
+        run("rm -rf {}/web_static".format(folder))
+        run("rm -rf /data/web_static/current")
+        run("ln -s {} /data/web_static/current".format(folder))
         return True
     except:
         return False
