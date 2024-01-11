@@ -42,10 +42,8 @@ def do_deploy(archive_path):
 
 
 def deploy():
-    """Function to deploy the web_static."""
-    try:
-        archive_path = do_pack()
-        value = do_deploy(archive_path)
-        return value
-    except:
+    """creates and distributes an archive to the web servers"""
+    archive_path = do_pack()
+    if archive_path is None:
         return False
+    return do_deploy(archive_path)
