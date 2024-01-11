@@ -1,6 +1,6 @@
 #!/usr/bin/python3
-""" Fabric script that distributes an archive to your web servers,
-using the function do_deploy """
+""" that creates and distributes an archive to your web servers,
+using the function deploy """
 
 from fabric.api import *
 from os import path
@@ -44,7 +44,7 @@ def do_deploy(archive_path):
 
 def deploy():
     """Function to deploy the web_static."""
-    path = do_pack()
-    if path is None:
+    ar_path = do_pack()
+    if ar_path is None:
         return False
-    return do_deploy(path)
+    return do_deploy(ar_path)
