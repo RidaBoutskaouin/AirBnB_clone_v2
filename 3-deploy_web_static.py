@@ -2,7 +2,7 @@
 """ that creates and distributes an archive to your web servers,
 using the function deploy """
 
-from fabric.api import *
+from fabric.api import local, env, put, run
 from os import path
 from datetime import datetime
 
