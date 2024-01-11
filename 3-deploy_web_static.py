@@ -4,6 +4,7 @@ using the function do_deploy """
 
 from fabric.api import *
 from os import path
+from datetime import datetime
 
 env.hosts = ["52.205.104.225", "54.208.233.216"]
 env.user = "ubuntu"
